@@ -46,4 +46,6 @@ services:
 
 volumes:
   postgres_data:
+    name: wiki_notes_db_data
+    external: false  # Set to true after creating manually for extra protection
 

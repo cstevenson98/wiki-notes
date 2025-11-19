@@ -28,3 +28,12 @@ Thumbs.db
 *.db
 postgres_data/
 
+# Backups (store these separately!)
+backups/
+*.sql
+*.sql.gz
+
+# Logs
+logs/
+*.log
+

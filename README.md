@@ -114,6 +114,39 @@ CREATE TABLE pages (
 5. Clicking a red link prompts you to create that page
 6. Use the search bar at the top to find pages by name
 
+## Backup & Data Protection
+
+⚠️ **Important**: Protect your wiki data with regular backups!
+
+### Quick Backup
+
+```bash
+# Create a backup
+./scripts/backup-db.sh
+
+# Restore from backup
+./scripts/restore-db.sh backups/wiki_notes_backup_YYYYMMDD_HHMMSS.sql.gz
+```
+
+### Automated Backups
+
+Set up daily backups with cron:
+
+```bash
+crontab -e
+# Add: 0 2 * * * cd /home/conor/dev/wiki-notes && ./scripts/auto-backup.sh
+```
+
+### Protection from Accidental Deletion
+
+The database volume is configured to persist even with `docker-compose down`. However, avoid using:
+
+```bash
+docker-compose down -v  # ⚠️ This WILL delete all data!
+```
+
+📖 **See [BACKUP_GUIDE.md](BACKUP_GUIDE.md) for complete backup strategies, disaster recovery, and off-site backup options.**
+
 ## License
 
 MIT
