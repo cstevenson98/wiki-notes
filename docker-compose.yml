@@ -16,33 +16,33 @@ services:
       timeout: 5s
       retries: 5
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432/wikinotes?sslmode=disable
-      PORT: 8080
-    ports:
-      - "8080:8080"
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: unless-stopped
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     DATABASE_URL: postgres://postgres:postgres@db:5432/wikinotes?sslmode=disable
+  #     PORT: 8080
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   restart: unless-stopped
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    environment:
-      PUBLIC_API_URL: http://backend:8080
-      ORIGIN: http://localhost:5173
-      PORT: 3000
-    ports:
-      - "5173:3000"
-    depends_on:
-      - backend
-    restart: unless-stopped
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     PUBLIC_API_URL: http://backend:8080
+  #     ORIGIN: http://localhost:5173
+  #     PORT: 3000
+  #   ports:
+  #     - "5173:3000"
+  #   depends_on:
+  #     - backend
+  #   restart: unless-stopped
 
 volumes:
   postgres_data:

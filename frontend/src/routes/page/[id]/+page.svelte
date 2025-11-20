@@ -18,7 +18,7 @@
 	let showCreateDialog = $state(false);
 	let newPageName = $state('');
 	let creating = $state(false);
-	let contentElement: HTMLDivElement;
+	let contentElement = $state<HTMLDivElement>();
 
 	const displayContent = $derived(processWikiLinksForDisplay(page.content));
 
