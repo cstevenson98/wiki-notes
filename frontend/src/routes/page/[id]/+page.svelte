@@ -19,6 +19,9 @@
 	let newPageName = $state('');
 	let creating = $state(false);
 	let contentElement = $state<HTMLDivElement>();
+	let showBacklinks = $state(false);
+	let backlinks = $state<Page[]>([]);
+	let loadingBacklinks = $state(false);
 
 	const displayContent = $derived(processWikiLinksForDisplay(page.content));
 
@@ -137,7 +140,30 @@
 		editedContent = data.page.content;
 		isEditing = false;
 		currentPageStore.set(data.page);
+		// Reset backlinks when page changes
+		showBacklinks = false;
+		backlinks = [];
 	});
+
+	async function toggleBacklinks() {
+		if (showBacklinks) {
+			showBacklinks = false;
+		} else {
+			showBacklinks = true;
+			if (backlinks.length === 0 && !loadingBacklinks) {
+				loadingBacklinks = true;
+				try {
+					const result = await api.getBacklinks(page.id);
+					backlinks = Array.isArray(result) ? result : [];
+				} catch (error) {
+					console.error('Failed to load backlinks:', error);
+					backlinks = [];
+				} finally {
+					loadingBacklinks = false;
+				}
+			}
+		}
+	}
 </script>
 
 <article class="space-y-4">
@@ -145,6 +171,9 @@
 		<h1 class="text-3xl font-bold">{page.name}</h1>
 		<div class="flex gap-2">
 			{#if !isEditing}
+				<Button variant="outline" onclick={toggleBacklinks}>
+					{showBacklinks ? 'Hide' : 'Backlinks'}
+				</Button>
 				<Button onclick={() => (isEditing = true)}>Edit</Button>
 			{:else}
 				<Button variant="outline" onclick={cancelEdit} disabled={isSaving}>Cancel</Button>
@@ -154,6 +183,30 @@
 			{/if}
 		</div>
 	</div>
+
+	{#if showBacklinks}
+		<div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+			<h2 class="text-lg font-semibold mb-3">Pages linking to this page</h2>
+			{#if loadingBacklinks}
+				<p class="text-gray-500">Loading backlinks...</p>
+			{:else if backlinks.length === 0}
+				<p class="text-gray-500">No pages link to this page yet.</p>
+			{:else}
+				<ul class="space-y-2">
+					{#each backlinks as backlink (backlink.id)}
+						<li>
+							<a
+								href="/page/{backlink.id}"
+								class="text-blue-600 hover:text-blue-800 hover:underline"
+							>
+								{backlink.name}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			{/if}
+		</div>
+	{/if}
 
 	{#if saveMessage}
 		<div

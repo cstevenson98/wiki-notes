@@ -1,7 +1,7 @@
 const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080';
 
 export interface Page {
-	id: string;
+	id: number;
 	name: string;
 	content: string;
 	created_at: string;
@@ -27,7 +27,7 @@ export const api = {
 		return response.json();
 	},
 
-	async getPageById(id: string): Promise<Page> {
+	async getPageById(id: number): Promise<Page> {
 		const response = await fetch(`${API_URL}/api/page/${id}`);
 		if (!response.ok) {
 			throw new Error('Failed to fetch page');
@@ -61,7 +61,7 @@ export const api = {
 		return response.json();
 	},
 
-	async updatePage(id: string, data: UpdatePageRequest): Promise<Page> {
+	async updatePage(id: number, data: UpdatePageRequest): Promise<Page> {
 		const response = await fetch(`${API_URL}/api/page/${id}`, {
 			method: 'PATCH',
 			headers: {
@@ -75,13 +75,23 @@ export const api = {
 		return response.json();
 	},
 
-	async deletePage(id: string): Promise<void> {
+	async deletePage(id: number): Promise<void> {
 		const response = await fetch(`${API_URL}/api/page/${id}`, {
 			method: 'DELETE'
 		});
 		if (!response.ok) {
 			throw new Error('Failed to delete page');
 		}
+	},
+
+	async getBacklinks(id: number): Promise<Page[]> {
+		const response = await fetch(`${API_URL}/api/page/${id}/backlinks`);
+		if (!response.ok) {
+			throw new Error('Failed to fetch backlinks');
+		}
+		const data = await response.json();
+		// Ensure we always return an array, even if the response is null
+		return Array.isArray(data) ? data : [];
 	}
 };
 

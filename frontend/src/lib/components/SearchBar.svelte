@@ -22,7 +22,7 @@
 		}, 200);
 	}
 
-	function selectPage(pageId: string) {
+	function selectPage(pageId: number) {
 		goto(`/page/${pageId}`);
 		searchQuery = '';
 		showResults = false;

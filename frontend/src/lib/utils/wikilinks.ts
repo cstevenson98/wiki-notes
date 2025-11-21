@@ -4,7 +4,7 @@ export interface ParsedWikiLink {
 	text: string;
 	pageName: string;
 	exists: boolean;
-	pageId?: string;
+	pageId?: number;
 }
 
 export function parseWikiLinks(content: string, pages: Page[]): ParsedWikiLink[] {

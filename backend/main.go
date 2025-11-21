@@ -34,6 +34,7 @@ func main() {
 	api := router.Group("/api")
 	{
 		api.GET("/pages", pageHandler.GetAllPages)
+		api.GET("/page/:id/backlinks", pageHandler.GetBacklinks)
 		api.GET("/page/:id", pageHandler.GetPageByID)
 		api.GET("/page/by-name/:name", pageHandler.GetPageByName)
 		api.POST("/page", pageHandler.CreatePage)
